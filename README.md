@@ -3,16 +3,6 @@
 Uma empresa de e-commerce deseja prever a propensão de compra dos usuários com
 base em seu comportamento de navegação.
 
-## Objetivo desta entrega
-
-Esta entrega corresponde exclusivamente à **Etapa 1 — Clean Code e Estrutura**.
-Ela fornece uma base modular para carregar um CSV, aplicar uma limpeza básica e
-separar as features do target. Não há treinamento de modelos nesta etapa.
-
-Docker, DVC, MLflow, Model Registry, API, deploy, CI/CD, otimização de
-hiperparâmetros e o pipeline completo de Machine Learning ficam para os demais
-integrantes nas próximas etapas.
-
 ## Estrutura do projeto
 
 ```text
