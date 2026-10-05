@@ -1,0 +1,41 @@
+[project]
+name = "purchase-propensity"
+version = "0.1.0"
+description = "Etapa 1 do Tech Challenge: Clean Code e estrutura para propensão de compra."
+readme = "README.md"
+requires-python = ">=3.11,<4.0"
+dependencies = [
+    "pandas>=2.2,<3.0",
+    "numpy>=1.26,<3.0",
+    "scikit-learn>=1.5,<2.0",
+    "pyyaml>=6.0,<7.0",
+]
+
+[tool.poetry]
+packages = [{ include = "purchase_propensity", from = "src" }]
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.0,<10.0"
+ruff = ">=0.9,<1.0"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+src = ["src"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "D", "ANN"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["D"]
+
+[build-system]
+requires = ["poetry-core>=2.0,<3.0"]
+build-backend = "poetry.core.masonry.api"

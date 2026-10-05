@@ -1,0 +1,11 @@
+project:
+  name: purchase_propensity
+  random_seed: 42
+
+data:
+  raw_path: data/raw
+  processed_path: data/processed
+  dataset_file: online_shoppers_intention.csv
+
+model:
+  target_column: revenue
