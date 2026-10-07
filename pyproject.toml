@@ -18,6 +18,8 @@ packages = [{ include = "purchase_propensity", from = "src" }]
 pytest = ">=8.0,<10.0"
 ruff = ">=0.9,<1.0"
 dvc = "^3.67.1"
+ipykernel = "^7.4.0"
+matplotlib = "^3.11.2"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
