@@ -1,7 +1,7 @@
 [project]
 name = "purchase-propensity"
 version = "0.1.0"
-description = "Etapa 1 do Tech Challenge: Clean Code e estrutura para propensão de compra."
+description = "Sistema preditivo para identificar propensão de compra de um usuário baseado em seu comportamento de navegação."
 readme = "README.md"
 requires-python = ">=3.11,<4.0"
 dependencies = [
@@ -17,6 +17,7 @@ packages = [{ include = "purchase_propensity", from = "src" }]
 [tool.poetry.group.dev.dependencies]
 pytest = ">=8.0,<10.0"
 ruff = ">=0.9,<1.0"
+dvc = "^3.67.1"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
