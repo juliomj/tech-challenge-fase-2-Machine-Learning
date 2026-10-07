@@ -1,0 +1,19 @@
+schema: '2.0'
+stages:
+  download_raw:
+    cmd: "poetry run python -m purchase_propensity.data.download --url \"https://archive.ics.uci.edu/static/public/468/online+shoppers+purchasing+intention+dataset.zip\"\
+      \ --output \"data/raw/online_shoppers_intention.csv\"\n"
+    deps:
+    - path: configs/config.yaml
+      hash: md5
+      md5: 7c46100293dea8438d1f019b6b124bdf
+      size: 316
+    - path: src/purchase_propensity/data/download.py
+      hash: md5
+      md5: 7f4377dbe345c5dd3edc92419dd7ad8a
+      size: 1284
+    outs:
+    - path: data/raw/online_shoppers_intention.csv
+      hash: md5
+      md5: cc6ec1db03b4f10f8de52c56ff48b085
+      size: 1072063

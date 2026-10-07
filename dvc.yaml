@@ -1,0 +1,28 @@
+stages:
+  download_raw:
+    cmd: >
+      poetry run python -m purchase_propensity.data.download
+      --url "https://archive.ics.uci.edu/static/public/468/online+shoppers+purchasing+intention+dataset.zip"
+      --output data/raw/online_shoppers_intention.csv
+    deps:
+      - src/purchase_propensity/data/download.py
+    outs:
+      - data/raw/online_shoppers_intention.csv
+
+  preprocess:
+    cmd: poetry run python -m purchase_propensity.data.preprocessing
+    deps:
+      - data/raw/online_shoppers_intention.csv
+      - src/purchase_propensity/data/preprocessing.py
+      - configs/config.yaml
+    outs:
+      - data/processed/online_shoppers_intention.csv
+
+  prepare_data:
+    cmd: poetry run python -m purchase_propensity.features.build_features
+    deps:
+      - data/processed/online_shoppers_intention.csv
+      - src/purchase_propensity/features/build_features.py
+      - configs/config.yaml
+    outs:
+      - data/prepared/
