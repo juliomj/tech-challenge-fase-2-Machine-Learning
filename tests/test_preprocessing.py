@@ -1,5 +1,7 @@
 """Tests for dataset preprocessing."""
 
+import warnings
+
 import pandas as pd
 import pytest
 
@@ -196,13 +198,21 @@ def test_preprocess_returns_clean_copy(
 def test_preprocess_removes_empty_rows(
     valid_dataframe: pd.DataFrame,
 ) -> None:
-    dataframe = pd.concat(
-        [
-            valid_dataframe,
-            pd.DataFrame([dict.fromkeys(valid_dataframe)]),
-        ],
-        ignore_index=True,
-    )
+    with warnings.catch_warnings():
+        # Disabled cause the concatenation with an empty DataFrame is intentional
+        warnings.filterwarnings(
+            "ignore",
+            category=FutureWarning,
+            message="The behavior of DataFrame concatenation with empty*",
+        )
+
+        dataframe = pd.concat(
+            [
+                valid_dataframe,
+                pd.DataFrame([dict.fromkeys(valid_dataframe)]),
+            ],
+            ignore_index=True,
+        )
 
     result = remove_empty_rows(dataframe)
 

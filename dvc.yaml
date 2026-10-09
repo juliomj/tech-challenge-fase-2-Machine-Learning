@@ -29,3 +29,17 @@ stages:
 
     outs:
       - ${data.processed_path}/${data.dataset_file}
+
+
+  build_features:
+    cmd: >
+      poetry run python -m purchase_propensity.features.build_features
+      --input "${data.processed_path}/${data.dataset_file}"
+      --output "${data.prepared_path}"
+
+    deps:
+      - ${data.processed_path}/${data.dataset_file}
+      - src/purchase_propensity/features/build_features.py
+
+    outs:
+      - ${data.prepared_path}

@@ -173,7 +173,7 @@ def normalize_boolean_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
                 msg,
             )
 
-        normalized[column] = converted.astype("boolean")
+        normalized[column] = converted.astype("Int64")
 
     return normalized
 
