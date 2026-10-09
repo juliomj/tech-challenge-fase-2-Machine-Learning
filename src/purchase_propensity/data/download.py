@@ -11,7 +11,7 @@ def download_dataset(url: str, output_path: Path) -> None:
     """Download a ZIP archive and extract its CSV to output_path."""
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    with urlopen(url) as response:
+    with urlopen(url) as response:  # noqa: S310
         archive = BytesIO(response.read())
 
     with ZipFile(archive) as zip_file:
