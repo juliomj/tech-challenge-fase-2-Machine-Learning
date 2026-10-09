@@ -336,12 +336,12 @@ def save_prepared_data(
     output_directory.mkdir(parents=True, exist_ok=True)
 
     train_data.to_csv(
-        output_directory / "train.csv",
+        output_directory / CONFIG["data"]["train_dataset_file"],
         index=False,
     )
 
     test_data.to_csv(
-        output_directory / "test.csv",
+        output_directory / CONFIG["data"]["test_dataset_file"],
         index=False,
     )
 

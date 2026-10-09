@@ -6,8 +6,8 @@ stages:
     deps:
     - path: configs/config.yaml
       hash: md5
-      md5: 0bda71004f9c0f9ec592abf969b7e232
-      size: 364
+      md5: 45caafabd79c87df19db69eebd32ea52
+      size: 428
     - path: src/purchase_propensity/data/download.py
       hash: md5
       md5: 21adec51504210eec79490354402a5f4
@@ -44,8 +44,8 @@ stages:
       size: 1159694
     - path: src/purchase_propensity/features/build_features.py
       hash: md5
-      md5: fcfc0383ab6ff3305b6fde0a5183a1d8
-      size: 11081
+      md5: 058550a398963980dd84f25c95af7fec
+      size: 11131
     outs:
     - path: data/prepared
       hash: md5
