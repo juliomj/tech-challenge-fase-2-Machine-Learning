@@ -6,8 +6,8 @@ stages:
     deps:
     - path: configs/config.yaml
       hash: md5
-      md5: 7c46100293dea8438d1f019b6b124bdf
-      size: 316
+      md5: 2dde9ee1d519807fea0c4c8cd9c7fc35
+      size: 346
     - path: src/purchase_propensity/data/download.py
       hash: md5
       md5: 7f4377dbe345c5dd3edc92419dd7ad8a
@@ -17,3 +17,20 @@ stages:
       hash: md5
       md5: cc6ec1db03b4f10f8de52c56ff48b085
       size: 1072063
+  preprocess:
+    cmd: "poetry run python -m purchase_propensity.data.preprocessing --input \"data/raw/online_shoppers_intention.csv\"\
+      \ --output \"data/processed/online_shoppers_intention.csv\"\n"
+    deps:
+    - path: data/raw/online_shoppers_intention.csv
+      hash: md5
+      md5: cc6ec1db03b4f10f8de52c56ff48b085
+      size: 1072063
+    - path: src/purchase_propensity/data/preprocessing.py
+      hash: md5
+      md5: 0e9e1ac174be8cc9d12a44a28243d484
+      size: 6634
+    outs:
+    - path: data/processed/online_shoppers_intention.csv
+      hash: md5
+      md5: d7997b99df75c13e6c5724b611cc6972
+      size: 1159694

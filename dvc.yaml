@@ -1,28 +1,31 @@
+vars:
+  - configs/config.yaml
+
 stages:
+
   download_raw:
     cmd: >
       poetry run python -m purchase_propensity.data.download
-      --url "https://archive.ics.uci.edu/static/public/468/online+shoppers+purchasing+intention+dataset.zip"
-      --output data/raw/online_shoppers_intention.csv
+      --url "${data.source_url}"
+      --output "${data.raw_path}/${data.dataset_file}"
+
     deps:
       - src/purchase_propensity/data/download.py
+      - configs/config.yaml
+
     outs:
-      - data/raw/online_shoppers_intention.csv
+      - ${data.raw_path}/${data.dataset_file}
+
 
   preprocess:
-    cmd: poetry run python -m purchase_propensity.data.preprocessing
-    deps:
-      - data/raw/online_shoppers_intention.csv
-      - src/purchase_propensity/data/preprocessing.py
-      - configs/config.yaml
-    outs:
-      - data/processed/online_shoppers_intention.csv
+    cmd: >
+      poetry run python -m purchase_propensity.data.preprocessing
+      --input "${data.raw_path}/${data.dataset_file}"
+      --output "${data.processed_path}/${data.dataset_file}"
 
-  prepare_data:
-    cmd: poetry run python -m purchase_propensity.features.build_features
     deps:
-      - data/processed/online_shoppers_intention.csv
-      - src/purchase_propensity/features/build_features.py
-      - configs/config.yaml
+      - ${data.raw_path}/${data.dataset_file}
+      - src/purchase_propensity/data/preprocessing.py
+
     outs:
-      - data/prepared/
+      - ${data.processed_path}/${data.dataset_file}
