@@ -21,13 +21,16 @@ def load_dataset(file_path: Path) -> pd.DataFrame:
         pandas.errors.ParserError: If the CSV is malformed.
     """
     if not file_path.exists():
-        raise FileNotFoundError(f"Dataset file not found: {file_path}")
+        msg = f"Dataset file not found: {file_path}"
+        raise FileNotFoundError(msg)
 
     try:
         dataframe = pd.read_csv(file_path)
     except EmptyDataError as error:
-        raise ValueError(f"Dataset is empty: {file_path}") from error
+        msg_0 = f"Dataset is empty: {file_path}"
+        raise ValueError(msg_0) from error
 
     if dataframe.empty:
-        raise ValueError(f"Dataset is empty: {file_path}")
+        msg_1 = f"Dataset is empty: {file_path}"
+        raise ValueError(msg_1)
     return dataframe

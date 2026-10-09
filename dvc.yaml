@@ -1,0 +1,45 @@
+vars:
+  - configs/config.yaml
+
+stages:
+
+  download_raw:
+    cmd: >
+      poetry run python -m purchase_propensity.data.download
+      --url "${data.source_url}"
+      --output "${data.raw_path}/${data.dataset_file}"
+
+    deps:
+      - src/purchase_propensity/data/download.py
+      - configs/config.yaml
+
+    outs:
+      - ${data.raw_path}/${data.dataset_file}
+
+
+  preprocess:
+    cmd: >
+      poetry run python -m purchase_propensity.data.preprocessing
+      --input "${data.raw_path}/${data.dataset_file}"
+      --output "${data.processed_path}/${data.dataset_file}"
+
+    deps:
+      - ${data.raw_path}/${data.dataset_file}
+      - src/purchase_propensity/data/preprocessing.py
+
+    outs:
+      - ${data.processed_path}/${data.dataset_file}
+
+
+  build_features:
+    cmd: >
+      poetry run python -m purchase_propensity.features.build_features
+      --input "${data.processed_path}/${data.dataset_file}"
+      --output "${data.prepared_path}"
+
+    deps:
+      - ${data.processed_path}/${data.dataset_file}
+      - src/purchase_propensity/features/build_features.py
+
+    outs:
+      - ${data.prepared_path}

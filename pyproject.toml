@@ -1,7 +1,7 @@
 [project]
 name = "purchase-propensity"
 version = "0.1.0"
-description = "Etapa 1 do Tech Challenge: Clean Code e estrutura para propensão de compra."
+description = "Sistema preditivo para identificar propensão de compra de um usuário baseado em seu comportamento de navegação."
 readme = "README.md"
 requires-python = ">=3.11,<4.0"
 dependencies = [
@@ -17,6 +17,9 @@ packages = [{ include = "purchase_propensity", from = "src" }]
 [tool.poetry.group.dev.dependencies]
 pytest = ">=8.0,<10.0"
 ruff = ">=0.9,<1.0"
+dvc = "^3.67.1"
+ipykernel = "^7.4.0"
+matplotlib = "^3.11.2"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -26,15 +29,18 @@ addopts = "-ra"
 target-version = "py311"
 line-length = 88
 src = ["src"]
+extend-exclude = ["*.ipynb"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B", "D", "ANN"]
+select = ["ALL"]
+ignore = ["CPY001", "COM812"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**/*.py" = ["D"]
+"tests/**/*.py" = ["D", "S101"]
+"notebooks/**/*.ipynb" = ["T201"]
 
 [build-system]
 requires = ["poetry-core>=2.0,<3.0"]

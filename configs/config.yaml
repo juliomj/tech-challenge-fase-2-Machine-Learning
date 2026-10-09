@@ -5,7 +5,12 @@ project:
 data:
   raw_path: data/raw
   processed_path: data/processed
+  prepared_path: data/prepared
   dataset_file: online_shoppers_intention.csv
+  train_dataset_file: train.csv
+  test_dataset_file: test.csv
+  source_url: https://archive.ics.uci.edu/static/public/468/online+shoppers+purchasing+intention+dataset.zip
 
 model:
   target_column: revenue
+  test_size: 0.2

@@ -1,0 +1,54 @@
+schema: '2.0'
+stages:
+  download_raw:
+    cmd: "poetry run python -m purchase_propensity.data.download --url \"https://archive.ics.uci.edu/static/public/468/online+shoppers+purchasing+intention+dataset.zip\"\
+      \ --output \"data/raw/online_shoppers_intention.csv\"\n"
+    deps:
+    - path: configs/config.yaml
+      hash: md5
+      md5: 45caafabd79c87df19db69eebd32ea52
+      size: 428
+    - path: src/purchase_propensity/data/download.py
+      hash: md5
+      md5: 21adec51504210eec79490354402a5f4
+      size: 1298
+    outs:
+    - path: data/raw/online_shoppers_intention.csv
+      hash: md5
+      md5: cc6ec1db03b4f10f8de52c56ff48b085
+      size: 1072063
+  preprocess:
+    cmd: "poetry run python -m purchase_propensity.data.preprocessing --input \"data/raw/online_shoppers_intention.csv\"\
+      \ --output \"data/processed/online_shoppers_intention.csv\"\n"
+    deps:
+    - path: data/raw/online_shoppers_intention.csv
+      hash: md5
+      md5: cc6ec1db03b4f10f8de52c56ff48b085
+      size: 1072063
+    - path: src/purchase_propensity/data/preprocessing.py
+      hash: md5
+      md5: 440cdaf117f744011674779b45e7a69b
+      size: 6630
+    outs:
+    - path: data/processed/online_shoppers_intention.csv
+      hash: md5
+      md5: d7997b99df75c13e6c5724b611cc6972
+      size: 1159694
+  build_features:
+    cmd: "poetry run python -m purchase_propensity.features.build_features --input
+      \"data/processed/online_shoppers_intention.csv\" --output \"data/prepared\"\n"
+    deps:
+    - path: data/processed/online_shoppers_intention.csv
+      hash: md5
+      md5: d7997b99df75c13e6c5724b611cc6972
+      size: 1159694
+    - path: src/purchase_propensity/features/build_features.py
+      hash: md5
+      md5: 058550a398963980dd84f25c95af7fec
+      size: 11131
+    outs:
+    - path: data/prepared
+      hash: md5
+      md5: a041013c57773e6eef6ce0309e98955b.dir
+      size: 4483024
+      nfiles: 2
