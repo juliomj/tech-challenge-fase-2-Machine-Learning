@@ -18,7 +18,7 @@ MODEL_PARAMS = CONFIG["model"]["params"]
 logger = get_logger(__name__)
 
 
-def build_model(params: dict[str, object] | None = None) -> RandomForestClassifier:
+def build_model(params: dict | None = None) -> RandomForestClassifier:
     """Build an unfitted Random Forest with a fixed random seed.
 
     Args:
@@ -37,7 +37,7 @@ def build_model(params: dict[str, object] | None = None) -> RandomForestClassifi
 def train_model(
     features: pd.DataFrame,
     target: pd.Series,
-    params: dict[str, object] | None = None,
+    params: dict | None = None,
 ) -> RandomForestClassifier:
     """Fit the classifier on the training data.
 

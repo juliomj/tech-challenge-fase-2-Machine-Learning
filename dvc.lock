@@ -63,8 +63,8 @@ stages:
       size: 1386
     - path: src/purchase_propensity/features/build_features.py
       hash: md5
-      md5: e3c5eebf649066f44aaab1c793e7af58
-      size: 9451
+      md5: e3f9821bf4bc462799e1eeec0d63a698
+      size: 9766
     params:
       configs/config.yaml:
         model.target_column: revenue
@@ -90,8 +90,8 @@ stages:
       size: 1386
     - path: src/purchase_propensity/models/train.py
       hash: md5
-      md5: aa221a2c74929cf78d999233fdfcd548
-      size: 2965
+      md5: 9812251017a4fb3a86437fc49f2e881f
+      size: 2939
     params:
       configs/config.yaml:
         model.params:
@@ -123,8 +123,8 @@ stages:
       size: 1386
     - path: src/purchase_propensity/models/evaluate.py
       hash: md5
-      md5: 54697160e8effc2c3825a9c2d2a69b0e
-      size: 3477
+      md5: e510826c8d90fa40041997c6da45cb12
+      size: 3530
     outs:
     - path: metrics/metrics.json
       hash: md5
@@ -149,15 +149,15 @@ stages:
       size: 7690969
     - path: src/purchase_propensity/models/tracking.py
       hash: md5
-      md5: 52c9359d58a88e16ba2ec80b1e65a29b
-      size: 4762
+      md5: d0374f32d052404db6b94ffc3296613d
+      size: 4801
     params:
       configs/config.yaml:
         mlflow.experiment_name: purchase_propensity
     outs:
     - path: metrics/mlflow_run.json
       hash: md5
-      md5: 1ac4663887e8bd73ba0c5c126a4e88ed
+      md5: a666df0e6e7b3bda6ca66460ab734cab
       size: 89
   register:
     cmd: "poetry run python -m purchase_propensity.models.registry --input \"metrics/mlflow_run.json\"\
@@ -165,12 +165,12 @@ stages:
     deps:
     - path: metrics/mlflow_run.json
       hash: md5
-      md5: 1ac4663887e8bd73ba0c5c126a4e88ed
+      md5: a666df0e6e7b3bda6ca66460ab734cab
       size: 89
     - path: src/purchase_propensity/models/registry.py
       hash: md5
-      md5: 98fc3f98fc66c3e49a20d5886dc9dadd
-      size: 5859
+      md5: 711c27b6d86ecffa4b2f8b328f0127d6
+      size: 5987
     params:
       configs/config.yaml:
         mlflow.champion_alias: champion
@@ -180,5 +180,5 @@ stages:
     outs:
     - path: metrics/registered_model.json
       hash: md5
-      md5: de5044589fa64c3ac2f19aec655d7c22
+      md5: 05aa06ef5013b092fc0bff94f280398e
       size: 282

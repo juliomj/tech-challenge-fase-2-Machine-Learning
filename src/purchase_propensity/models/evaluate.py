@@ -6,7 +6,7 @@ from pathlib import Path
 
 import joblib
 import pandas as pd
-from sklearn.base import ClassifierMixin
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import (
     accuracy_score,
     f1_score,
@@ -23,7 +23,7 @@ logger = get_logger(__name__)
 
 
 def compute_metrics(
-    model: ClassifierMixin,
+    model: RandomForestClassifier,
     features: pd.DataFrame,
     target: pd.Series,
 ) -> dict[str, float]:
@@ -41,11 +41,11 @@ def compute_metrics(
     probabilities = model.predict_proba(features)[:, 1]
 
     return {
-        "accuracy": accuracy_score(target, predictions),
-        "precision": precision_score(target, predictions, zero_division=0),
-        "recall": recall_score(target, predictions, zero_division=0),
-        "f1": f1_score(target, predictions, zero_division=0),
-        "roc_auc": roc_auc_score(target, probabilities),
+        "accuracy": float(accuracy_score(target, predictions)),
+        "precision": float(precision_score(target, predictions, zero_division=0)),
+        "recall": float(recall_score(target, predictions, zero_division=0)),
+        "f1": float(f1_score(target, predictions, zero_division=0)),
+        "roc_auc": float(roc_auc_score(target, probabilities)),
     }
 
 

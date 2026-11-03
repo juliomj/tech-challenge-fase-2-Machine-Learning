@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import re
 from pathlib import Path
+from typing import TYPE_CHECKING, cast
 
 import pandas as pd
 from sklearn.compose import ColumnTransformer
@@ -22,6 +23,9 @@ from purchase_propensity.data.schema import (
     split_features_and_target,
 )
 from purchase_propensity.utils.config import CONFIG
+
+if TYPE_CHECKING:
+    import numpy as np
 
 # Disable considering that we opted-in and are using the suggested: .fillna(0)
 pd.set_option("future.no_silent_downcasting", True)  # noqa: FBT003
@@ -176,13 +180,14 @@ def split_train_test(
     Returns:
         Training features, test features, training target, and test target.
     """
-    return train_test_split(
+    train_features, test_features, train_target, test_target = train_test_split(
         features,
         target,
         test_size=TEST_SIZE,
         random_state=RANDOM_SEED,
         stratify=target,
     )
+    return train_features, test_features, train_target, test_target
 
 
 def normalize_feature_names(feature_names: list[str]) -> list[str]:
@@ -212,10 +217,11 @@ def transform_datasets(
     Returns:
         Prepared training and test DataFrames.
     """
-    train_transformed = pipeline.fit_transform(train_features)
-    test_transformed = pipeline.transform(test_features)
+    # O OneHotEncoder usa sparse_output=False, entao a saida e sempre densa.
+    train_transformed = cast("np.ndarray", pipeline.fit_transform(train_features))
+    test_transformed = cast("np.ndarray", pipeline.transform(test_features))
 
-    feature_names = normalize_feature_names(pipeline.get_feature_names_out().tolist())
+    feature_names = normalize_feature_names(list(pipeline.get_feature_names_out()))
 
     train_prepared = pd.DataFrame(
         train_transformed,

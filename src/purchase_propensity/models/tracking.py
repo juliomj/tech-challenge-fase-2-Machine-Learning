@@ -7,8 +7,9 @@ from pathlib import Path
 
 import joblib
 import mlflow
-import mlflow.sklearn
 import pandas as pd
+from mlflow.data.pandas_dataset import from_pandas
+from mlflow.sklearn import log_model
 from sklearn.base import BaseEstimator
 
 from purchase_propensity.data.loader import load_dataset
@@ -73,9 +74,9 @@ def log_run(
     with mlflow.start_run() as run:
         mlflow.log_params(build_run_params(model))
         mlflow.log_metrics(metrics)
-        dataset = mlflow.data.from_pandas(test_data, name="test")
+        dataset = from_pandas(test_data, name="test")
         mlflow.log_input(dataset, context="evaluation")
-        mlflow.sklearn.log_model(
+        log_model(
             model,
             name=MODEL_ARTIFACT_NAME,
             input_example=features.head(INPUT_EXAMPLE_ROWS).astype("float64"),
