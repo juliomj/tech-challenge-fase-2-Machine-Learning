@@ -16,7 +16,7 @@ from sklearn.metrics import (
 )
 
 from purchase_propensity.data.loader import load_dataset
-from purchase_propensity.models.train import split_features_and_target
+from purchase_propensity.data.schema import split_features_and_target
 from purchase_propensity.utils.logger import get_logger
 
 logger = get_logger(__name__)
@@ -57,7 +57,12 @@ def save_metrics(metrics: dict[str, float], output_path: Path) -> None:
         output_path: Destination JSON file.
     """
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(metrics, indent=2), encoding="utf-8")
+    # LF fixo: o md5 no dvc.lock precisa bater em Windows, Linux e Docker.
+    output_path.write_text(
+        json.dumps(metrics, indent=2),
+        encoding="utf-8",
+        newline="\n",
+    )
     logger.info("Metricas salvas em %s.", output_path)
 
 

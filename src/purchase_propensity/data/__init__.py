@@ -1,1 +1,1 @@
-"""CSV loading and basic, independent data cleaning operations."""
+"""Download, loading, schema and cleaning of the raw dataset."""

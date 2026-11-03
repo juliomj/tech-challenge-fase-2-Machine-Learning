@@ -24,13 +24,12 @@ def load_dataset(file_path: Path) -> pd.DataFrame:
         msg = f"Dataset file not found: {file_path}"
         raise FileNotFoundError(msg)
 
+    msg = f"Dataset is empty: {file_path}"
     try:
         dataframe = pd.read_csv(file_path)
     except EmptyDataError as error:
-        msg_0 = f"Dataset is empty: {file_path}"
-        raise ValueError(msg_0) from error
+        raise ValueError(msg) from error
 
     if dataframe.empty:
-        msg_1 = f"Dataset is empty: {file_path}"
-        raise ValueError(msg_1)
+        raise ValueError(msg)
     return dataframe

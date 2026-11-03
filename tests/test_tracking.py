@@ -10,12 +10,9 @@ import pandas as pd
 import pytest
 from mlflow import MlflowClient
 
+from purchase_propensity.data.schema import TARGET_COLUMN, split_features_and_target
 from purchase_propensity.models.tracking import build_run_params, track
-from purchase_propensity.models.train import (
-    TARGET_COLUMN,
-    split_features_and_target,
-    train_model,
-)
+from purchase_propensity.models.train import train_model
 
 METRICS = {"accuracy": 0.9, "precision": 0.8, "recall": 0.7, "f1": 0.75}
 

@@ -1,1 +1,1 @@
-"""Separate explanatory columns from the configured target."""
+"""Feature engineering and train/test preparation."""

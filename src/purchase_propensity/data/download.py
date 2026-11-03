@@ -8,7 +8,15 @@ from zipfile import ZipFile
 
 
 def download_dataset(url: str, output_path: Path) -> None:
-    """Download a ZIP archive and extract its CSV to output_path."""
+    """Download a ZIP archive and extract its CSV to output_path.
+
+    Args:
+        url: Address of the ZIP archive.
+        output_path: Destination of the extracted CSV.
+
+    Raises:
+        RuntimeError: If the archive does not contain exactly one CSV file.
+    """
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with urlopen(url) as response:  # noqa: S310
@@ -30,10 +38,11 @@ def download_dataset(url: str, output_path: Path) -> None:
             target.write(source.read())
 
 
-def main() -> None:  # noqa: D103
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--url", required=True)
-    parser.add_argument("--output", required=True)
+def main() -> None:
+    """Run the dataset download."""
+    parser = argparse.ArgumentParser(description="Download the raw dataset.")
+    parser.add_argument("--url", required=True, help="URL of the ZIP archive.")
+    parser.add_argument("--output", required=True, help="Path of the raw CSV.")
     args = parser.parse_args()
 
     download_dataset(

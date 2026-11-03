@@ -1,1 +1,1 @@
-"""Model training and evaluation."""
+"""Model training, evaluation, MLflow tracking and registry."""

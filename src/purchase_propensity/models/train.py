@@ -8,38 +8,17 @@ import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 
 from purchase_propensity.data.loader import load_dataset
+from purchase_propensity.data.schema import split_features_and_target
 from purchase_propensity.utils.config import CONFIG
 from purchase_propensity.utils.logger import get_logger
 
 RANDOM_SEED = CONFIG["project"]["random_seed"]
-TARGET_COLUMN = CONFIG["model"]["target_column"]
 MODEL_PARAMS = CONFIG["model"]["params"]
 
 logger = get_logger(__name__)
 
 
-def split_features_and_target(
-    dataframe: pd.DataFrame,
-) -> tuple[pd.DataFrame, pd.Series]:
-    """Separate model features from the target.
-
-    Args:
-        dataframe: Prepared dataset containing the target column.
-
-    Returns:
-        A tuple containing the feature DataFrame and the target Series.
-
-    Raises:
-        ValueError: If the target column is missing.
-    """
-    if TARGET_COLUMN not in dataframe.columns:
-        msg = f"Target column not found: {TARGET_COLUMN}"
-        raise ValueError(msg)
-
-    return dataframe.drop(columns=[TARGET_COLUMN]), dataframe[TARGET_COLUMN]
-
-
-def build_model(params: dict | None = None) -> RandomForestClassifier:
+def build_model(params: dict[str, object] | None = None) -> RandomForestClassifier:
     """Build an unfitted Random Forest with a fixed random seed.
 
     Args:
@@ -58,7 +37,7 @@ def build_model(params: dict | None = None) -> RandomForestClassifier:
 def train_model(
     features: pd.DataFrame,
     target: pd.Series,
-    params: dict | None = None,
+    params: dict[str, object] | None = None,
 ) -> RandomForestClassifier:
     """Fit the classifier on the training data.
 

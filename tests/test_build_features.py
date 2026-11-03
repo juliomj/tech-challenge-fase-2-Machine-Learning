@@ -6,6 +6,7 @@ import pandas as pd
 import pytest
 from sklearn.compose import ColumnTransformer
 
+from purchase_propensity.data.schema import split_features_and_target
 from purchase_propensity.features.build_features import (
     BINARY_COLUMNS,
     CATEGORICAL_COLUMNS,
@@ -15,7 +16,6 @@ from purchase_propensity.features.build_features import (
     add_engineered_features,
     build_features,
     build_preprocessing_pipeline,
-    split_features_and_target,
     split_train_test,
     transform_datasets,
     validate_columns,

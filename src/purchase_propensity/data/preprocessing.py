@@ -7,42 +7,22 @@ import re
 from pathlib import Path
 
 import pandas as pd
-from src.purchase_propensity.data.loader import load_dataset
 
-EXPECTED_COLUMNS = {
-    "administrative",
-    "administrative_duration",
-    "informational",
-    "informational_duration",
-    "productrelated",
-    "productrelated_duration",
-    "bouncerates",
-    "exitrates",
-    "pagevalues",
-    "specialday",
-    "month",
-    "operatingsystems",
-    "browser",
-    "region",
-    "traffictype",
-    "visitortype",
-    "weekend",
-    "revenue",
+from purchase_propensity.data.loader import load_dataset
+from purchase_propensity.data.schema import (
+    BOOLEAN_COLUMNS,
+    CATEGORICAL_COLUMNS,
+    EXPECTED_COLUMNS,
+)
+
+BOOLEAN_MAPPING = {
+    "true": True,
+    "false": False,
+    "1": True,
+    "0": False,
+    "yes": True,
+    "no": False,
 }
-
-BOOLEAN_COLUMNS = (
-    "weekend",
-    "revenue",
-)
-
-CATEGORICAL_COLUMNS = (
-    "month",
-    "operatingsystems",
-    "browser",
-    "region",
-    "traffictype",
-    "visitortype",
-)
 
 
 def normalize_column_names(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -70,8 +50,8 @@ def normalize_column_names(dataframe: pd.DataFrame) -> pd.DataFrame:
         raise ValueError(msg)
 
     if not normalized.columns.is_unique:
-        msg_0 = "Column names must be unique after normalization."
-        raise ValueError(msg_0)
+        msg = "Column names must be unique after normalization."
+        raise ValueError(msg)
 
     return normalized.copy()
 
@@ -96,8 +76,8 @@ def validate_columns(dataframe: pd.DataFrame) -> None:
         raise ValueError(msg)
 
     if unexpected_columns:
-        msg_0 = f"Unexpected columns found: {sorted(unexpected_columns)}"
-        raise ValueError(msg_0)
+        msg = f"Unexpected columns found: {sorted(unexpected_columns)}"
+        raise ValueError(msg)
 
 
 def remove_empty_rows(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -124,8 +104,31 @@ def normalize_categorical_values(dataframe: pd.DataFrame) -> pd.DataFrame:
     return normalized
 
 
+def convert_to_boolean(values: pd.Series) -> pd.Series:
+    """Convert textual or numeric boolean values to nullable integers.
+
+    Args:
+        values: Column with values such as ``True``, ``"no"`` or ``1``.
+
+    Returns:
+        The column as ``Int64`` (1, 0 or missing).
+
+    Raises:
+        ValueError: If a non-null value cannot be interpreted as boolean.
+    """
+    converted = values.astype("string").str.strip().str.lower().map(BOOLEAN_MAPPING)
+
+    invalid_mask = values.notna() & converted.isna()
+    if invalid_mask.any():
+        invalid_values = values[invalid_mask].drop_duplicates().tolist()
+        msg = f"Invalid boolean values found in '{values.name}': {invalid_values}"
+        raise ValueError(msg)
+
+    return converted.astype("Int64")
+
+
 def normalize_boolean_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
-    """Normalize boolean columns to pandas BooleanDtype.
+    """Normalize boolean columns to nullable integers.
 
     Args:
         dataframe: Input DataFrame.
@@ -138,42 +141,12 @@ def normalize_boolean_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
     """
     normalized = dataframe.copy()
 
-    boolean_mapping = {
-        "true": True,
-        "false": False,
-        "1": True,
-        "0": False,
-        "yes": True,
-        "no": False,
-    }
-
     for column in BOOLEAN_COLUMNS:
         if column not in normalized.columns:
             continue
 
-        if pd.api.types.is_bool_dtype(normalized[column]):
-            continue
-
-        converted = (
-            normalized[column]
-            .astype("string")
-            .str.strip()
-            .str.lower()
-            .map(boolean_mapping)
-        )
-
-        invalid_mask = normalized[column].notna() & converted.isna()
-
-        if invalid_mask.any():
-            invalid_values = (
-                normalized.loc[invalid_mask, column].drop_duplicates().tolist()
-            )
-            msg = f"Invalid boolean values found in '{column}': {invalid_values}"
-            raise ValueError(
-                msg,
-            )
-
-        normalized[column] = converted.astype("Int64")
+        if not pd.api.types.is_bool_dtype(normalized[column]):
+            normalized[column] = convert_to_boolean(normalized[column])
 
     return normalized
 
@@ -222,7 +195,11 @@ def preprocess_file(input_path: Path, output_path: Path) -> None:
 
 
 def parse_arguments() -> argparse.Namespace:
-    """Parse command-line arguments and return it."""
+    """Parse command-line arguments.
+
+    Returns:
+        Parsed command-line arguments.
+    """
     parser = argparse.ArgumentParser(description="Preprocess the raw dataset.")
     parser.add_argument(
         "--input",

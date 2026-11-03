@@ -7,13 +7,8 @@ import pandas as pd
 import pytest
 from sklearn.ensemble import RandomForestClassifier
 
-from purchase_propensity.models.train import (
-    TARGET_COLUMN,
-    build_model,
-    split_features_and_target,
-    train,
-    train_model,
-)
+from purchase_propensity.data.schema import TARGET_COLUMN, split_features_and_target
+from purchase_propensity.models.train import build_model, train, train_model
 
 
 @pytest.fixture

@@ -12,7 +12,7 @@ import pandas as pd
 from sklearn.base import BaseEstimator
 
 from purchase_propensity.data.loader import load_dataset
-from purchase_propensity.models.train import split_features_and_target
+from purchase_propensity.data.schema import split_features_and_target
 from purchase_propensity.utils.config import CONFIG
 from purchase_propensity.utils.logger import get_logger
 
@@ -94,7 +94,11 @@ def save_run_info(run_id: str, output_path: Path) -> None:
     """
     output_path.parent.mkdir(parents=True, exist_ok=True)
     run_info = {"run_id": run_id, "experiment": MLFLOW_CONFIG["experiment_name"]}
-    output_path.write_text(json.dumps(run_info, indent=2), encoding="utf-8")
+    output_path.write_text(
+        json.dumps(run_info, indent=2),
+        encoding="utf-8",
+        newline="\n",
+    )
 
 
 def track(

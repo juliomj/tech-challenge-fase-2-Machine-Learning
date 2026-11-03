@@ -159,7 +159,11 @@ def register(run_info_path: Path, output_path: Path) -> dict[str, object]:
     configure_mlflow()
     summary = register_best_model(run_info["run_id"])
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    output_path.write_text(
+        json.dumps(summary, indent=2),
+        encoding="utf-8",
+        newline="\n",
+    )
     return summary
 
 
