@@ -11,7 +11,10 @@ stages:
 
     deps:
       - src/purchase_propensity/data/download.py
-      - configs/config.yaml
+
+    params:
+      - configs/config.yaml:
+          - data.source_url
 
     outs:
       - ${data.raw_path}/${data.dataset_file}
@@ -26,6 +29,12 @@ stages:
     deps:
       - ${data.raw_path}/${data.dataset_file}
       - src/purchase_propensity/data/preprocessing.py
+      - src/purchase_propensity/data/schema.py
+      - src/purchase_propensity/data/loader.py
+
+    params:
+      - configs/config.yaml:
+          - model.target_column
 
     outs:
       - ${data.processed_path}/${data.dataset_file}
@@ -40,6 +49,14 @@ stages:
     deps:
       - ${data.processed_path}/${data.dataset_file}
       - src/purchase_propensity/features/build_features.py
+      - src/purchase_propensity/data/schema.py
+      - src/purchase_propensity/data/loader.py
+
+    params:
+      - configs/config.yaml:
+          - project.random_seed
+          - model.target_column
+          - model.test_size
 
     outs:
       - ${data.prepared_path}
@@ -53,6 +70,7 @@ stages:
     deps:
       - ${data.prepared_path}/${data.train_dataset_file}
       - src/purchase_propensity/models/train.py
+      - src/purchase_propensity/data/schema.py
 
     params:
       - configs/config.yaml:
@@ -74,6 +92,7 @@ stages:
       - ${model.model_path}/${model.model_file}
       - ${data.prepared_path}/${data.test_dataset_file}
       - src/purchase_propensity/models/evaluate.py
+      - src/purchase_propensity/data/schema.py
 
     metrics:
       - ${model.metrics_path}/${model.metrics_file}:
@@ -91,6 +110,7 @@ stages:
     deps:
       - ${model.model_path}/${model.model_file}
       - ${model.metrics_path}/${model.metrics_file}
+      - ${data.prepared_path}/${data.test_dataset_file}
       - src/purchase_propensity/models/tracking.py
 
     params:
