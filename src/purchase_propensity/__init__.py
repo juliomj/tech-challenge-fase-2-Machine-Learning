@@ -1,1 +1,1 @@
-"""Initial data utilities for the purchase propensity project."""
+"""Purchase propensity pipeline: data, features, training and MLflow."""

@@ -1,1 +1,1 @@
-"""Shared utilities with no data processing responsibilities."""
+"""Shared configuration and logging utilities."""

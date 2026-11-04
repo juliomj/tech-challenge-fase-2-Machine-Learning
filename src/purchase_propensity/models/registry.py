@@ -8,6 +8,7 @@ champion on the selection metric (champion/challenger strategy).
 import argparse
 import json
 from pathlib import Path
+from typing import cast
 
 import mlflow
 from mlflow import MlflowClient
@@ -73,7 +74,8 @@ def get_champion_score(client: MlflowClient) -> float | None:
         champion = client.get_model_version_by_alias(MODEL_NAME, CHAMPION_ALIAS)
     except MlflowException:
         return None
-    return get_run_score(client, champion.run_id)
+    # O champion sempre vem de uma run: promote_run registra a partir dela.
+    return get_run_score(client, cast("str", champion.run_id))
 
 
 def get_model_uri(client: MlflowClient, run_id: str) -> str:
@@ -89,14 +91,14 @@ def get_model_uri(client: MlflowClient, run_id: str) -> str:
     Raises:
         ValueError: If the run did not log a model.
     """
-    model_outputs = client.get_run(run_id).outputs.model_outputs
-    if not model_outputs:
+    outputs = client.get_run(run_id).outputs
+    if outputs is None or not outputs.model_outputs:
         msg = f"Run {run_id} has no logged model."
         raise ValueError(msg)
-    return f"models:/{model_outputs[0].model_id}"
+    return f"models:/{outputs.model_outputs[0].model_id}"
 
 
-def promote_run(client: MlflowClient, run_id: str) -> int:
+def promote_run(client: MlflowClient, run_id: str) -> str:
     """Register the run's model as a new version and mark it as champion.
 
     Args:
@@ -159,7 +161,11 @@ def register(run_info_path: Path, output_path: Path) -> dict[str, object]:
     configure_mlflow()
     summary = register_best_model(run_info["run_id"])
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    output_path.write_text(
+        json.dumps(summary, indent=2),
+        encoding="utf-8",
+        newline="\n",
+    )
     return summary
 
 

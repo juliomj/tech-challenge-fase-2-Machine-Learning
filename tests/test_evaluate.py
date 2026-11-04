@@ -7,12 +7,9 @@ import joblib
 import pandas as pd
 import pytest
 
+from purchase_propensity.data.schema import TARGET_COLUMN, split_features_and_target
 from purchase_propensity.models.evaluate import compute_metrics, evaluate
-from purchase_propensity.models.train import (
-    TARGET_COLUMN,
-    split_features_and_target,
-    train_model,
-)
+from purchase_propensity.models.train import train_model
 
 METRIC_NAMES = {"accuracy", "precision", "recall", "f1", "roc_auc"}
 

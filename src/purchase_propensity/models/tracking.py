@@ -7,12 +7,13 @@ from pathlib import Path
 
 import joblib
 import mlflow
-import mlflow.sklearn
 import pandas as pd
+from mlflow.data.pandas_dataset import from_pandas
+from mlflow.sklearn import log_model
 from sklearn.base import BaseEstimator
 
 from purchase_propensity.data.loader import load_dataset
-from purchase_propensity.models.train import split_features_and_target
+from purchase_propensity.data.schema import split_features_and_target
 from purchase_propensity.utils.config import CONFIG
 from purchase_propensity.utils.logger import get_logger
 
@@ -73,9 +74,9 @@ def log_run(
     with mlflow.start_run() as run:
         mlflow.log_params(build_run_params(model))
         mlflow.log_metrics(metrics)
-        dataset = mlflow.data.from_pandas(test_data, name="test")
+        dataset = from_pandas(test_data, name="test")
         mlflow.log_input(dataset, context="evaluation")
-        mlflow.sklearn.log_model(
+        log_model(
             model,
             name=MODEL_ARTIFACT_NAME,
             input_example=features.head(INPUT_EXAMPLE_ROWS).astype("float64"),
@@ -94,7 +95,11 @@ def save_run_info(run_id: str, output_path: Path) -> None:
     """
     output_path.parent.mkdir(parents=True, exist_ok=True)
     run_info = {"run_id": run_id, "experiment": MLFLOW_CONFIG["experiment_name"]}
-    output_path.write_text(json.dumps(run_info, indent=2), encoding="utf-8")
+    output_path.write_text(
+        json.dumps(run_info, indent=2),
+        encoding="utf-8",
+        newline="\n",
+    )
 
 
 def track(

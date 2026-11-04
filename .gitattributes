@@ -1,0 +1,7 @@
+# LF em todos os sistemas: o DVC calcula o md5 dos arquivos de dependencia,
+# e checkouts com CRLF no Windows invalidariam o dvc.lock.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.joblib binary
