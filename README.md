@@ -4,7 +4,7 @@ Tech Challenge — Fase 2 (11MLET). Pipeline de Machine Learning de ponta a pont
 para prever a propensão de compra de usuários de um e-commerce, com foco em
 Engenharia de ML: Clean Code, Poetry, DVC, MLflow e Docker.
 
-**Vídeo de apresentação (STAR):** _link_
+**Vídeo de apresentação (STAR):** _[link](https://youtu.be/dCatf8hEa7s)_
 
 ## Integrantes
 
@@ -57,7 +57,8 @@ valor das páginas, mês e tipo de visitante. A classe positiva é minoritária
 ├── Dockerfile / docker-compose.yml
 ├── pyproject.toml / poetry.lock
 ├── .env.example
-└── main.py                    # confere os dados preparados pelo pipeline
+├── main.py                    # confere os dados preparados pelo pipeline
+└── predict_sample.py          # envia sessões de teste ao modelo servido
 ```
 
 ## Boas práticas utilizadas
@@ -207,7 +208,15 @@ docker compose --profile serve down     # o volume mlflow-data mantém o histór
 O `configs/` é montado no container: alterar `config.yaml` no host e rodar
 `docker compose run --rm pipeline` de novo gera uma nova run e reavalia o campeão.
 
-Exemplo de predição (colunas de `data/prepared/test.csv`, sem `revenue`):
+Com o `serve` rodando e os dados preparados localmente, o script abaixo envia 5
+sessões do conjunto de teste para a API e compara a previsão com o resultado real:
+
+```bash
+poetry run python predict_sample.py
+```
+
+A API também aceita chamadas diretas (colunas de `data/prepared/test.csv`, sem
+`revenue`):
 
 ```bash
 curl -X POST http://localhost:8000/invocations -H "Content-Type: application/json" -d '{"dataframe_split": {"columns": ["..."], "data": [[...]]}}'
